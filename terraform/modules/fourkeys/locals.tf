@@ -8,6 +8,7 @@ locals {
   dashboard_container_url     = var.dashboard_container_url == "" ? format("gcr.io/%s/fourkeys-grafana-dashboard", var.project_id) : var.dashboard_container_url
   github_parser_url = var.github_parser_url == "" ? format("gcr.io/%s/github-parser", var.project_id) : var.github_parser_url
   gitlab_parser_url = var.gitlab_parser_url == "" ? format("gcr.io/%s/gitlab-parser", var.project_id) : var.gitlab_parser_url
+  jira_parser_url = var.jira_parser_url == "" ? format("gcr.io/%s/jira-parser", var.project_id) : var.jira_parser_url
   cloud_build_parser_url = var.cloud_build_parser_url == "" ? format("gcr.io/%s/cloud-build-parser", var.project_id) : var.cloud_build_parser_url
   tekton_parser_url = var.tekton_parser_url == "" ? format("gcr.io/%s/tekton-parser", var.project_id) : var.tekton_parser_url
   circleci_parser_url = var.circleci_parser_url == "" ? format("gcr.io/%s/circleci-parser", var.project_id) : var.circleci_parser_url

@@ -139,6 +139,9 @@ def get_source(headers):
     if "GitHub-Hookshot" in headers.get("User-Agent", ""):
         return "github"
 
+    if "Atlassian Webhook HTTP Client" in headers.get("User-Agent", ""):
+        return "jira"
+
     if "Circleci-Event-Type" in headers:
         return "circleci"
 
@@ -154,6 +157,9 @@ AUTHORIZED_SOURCES = {
         ),
     "gitlab": EventSource(
         "X-Gitlab-Token", simple_token_verification
+        ),
+    "jira": EventSource(
+        "token", simple_token_verification
         ),
     "tekton": EventSource(
         "tekton-secret", simple_token_verification

@@ -60,6 +60,12 @@ variable "gitlab_parser_url" {
   default     = ""
 }
 
+variable "jira_parser_url" {
+  type        = string
+  description = "The URL for the Jira parser container image. A default value pointing to the project's container registry is defined in under local values of this module."
+  default     = ""
+}
+
 variable "cloud_build_parser_url" {
   type        = string
   description = "The URL for the Cloud Build parser container image. A default value pointing to the project's container registry is defined in under local values of this module."
