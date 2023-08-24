@@ -57,6 +57,32 @@ def test_unverified_signature(client):
 @mock.patch(
     "event_handler.publish_to_pubsub", mock.MagicMock(return_value=True)
 )
+def test_verified_gitlab_signature(client):
+    r = client.post(
+        "/",
+        data="Hello",
+        headers={"X-Gitlab-Event": "test", "X-Gitlab-Token": "foo"},
+    )
+    assert r.status_code == 204
+
+
+@mock.patch("sources.get_secret", mock.MagicMock(return_value=b"foo"))
+@mock.patch(
+    "event_handler.publish_to_pubsub", mock.MagicMock(return_value=True)
+)
+def test_incorrect_gitlab_signature(client):
+    r = client.post(
+        "/",
+        data="Hello",
+        headers={"X-Gitlab-Event": "test", "X-Gitlab-Token": "bar"},
+    )
+    assert r.status_code == 403
+
+
+@mock.patch("sources.get_secret", mock.MagicMock(return_value=b"foo"))
+@mock.patch(
+    "event_handler.publish_to_pubsub", mock.MagicMock(return_value=True)
+)
 def test_verified_signature(client):
     signature = "sha1=" + hmac.new(b"foo", b"Hello", sha1).hexdigest()
     r = client.post(
