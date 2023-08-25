@@ -55,6 +55,36 @@ resource "google_bigquery_table" "view_jira_tasks_statuses" {
   ]
 }
 
+resource "google_bigquery_table" "view_tasks_jira" {
+  project    = var.project_id
+  dataset_id = google_bigquery_dataset.four_keys.dataset_id
+  table_id   = "tasks_jira"
+  view {
+    query          = file("${path.module}/queries/tasks_jira.sql")
+    use_legacy_sql = false
+  }
+  deletion_protection = false
+  depends_on = [
+    google_project_service.fourkeys_services,
+    google_bigquery_table.events_raw
+  ]
+}
+
+resource "google_bigquery_table" "view_tasks" {
+  project    = var.project_id
+  dataset_id = google_bigquery_dataset.four_keys.dataset_id
+  table_id   = "tasks"
+  view {
+    query          = file("${path.module}/queries/tasks.sql")
+    use_legacy_sql = false
+  }
+  deletion_protection = false
+  depends_on = [
+    google_project_service.fourkeys_services,
+    google_bigquery_table.events_raw
+  ]
+}
+
 resource "google_bigquery_routine" "func_json2array" {
   project      = var.project_id
   dataset_id   = google_bigquery_dataset.four_keys.dataset_id
