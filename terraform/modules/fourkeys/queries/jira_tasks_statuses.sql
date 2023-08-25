@@ -1,1 +1,0 @@
-../../../../queries/jira_tasks_statuses.sql
