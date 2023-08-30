@@ -9,6 +9,12 @@ variable "enable_apis" {
   default     = true
 }
 
+variable "enable_dashboard" {
+  type        = bool
+  description = "Toggle to enable cloud run service creation."
+  default     = true
+}
+
 variable "region" {
     type = string
     default = "us-central1"

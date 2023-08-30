@@ -6,4 +6,5 @@ module "fourkeys" {
   bigquery_region     = var.bigquery_region
   parsers             = var.parsers
   teams               = var.teams
+  enable_dashboard    = var.enable_dashboard
 }
