@@ -73,6 +73,7 @@ def process_gitlab_event(headers, msg):
     # Unique hash for the event
     signature = shared.create_unique_id(msg)
     source = "gitlab"
+    team = headers["X-Team"]
 
     if "Mock" in headers:
         source += "mock"
@@ -141,6 +142,7 @@ def process_gitlab_event(headers, msg):
         "signature": signature,
         "msg_id": msg["message_id"],
         "source": source,
+        "team": team,
     }
 
     return gitlab_event

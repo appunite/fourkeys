@@ -58,7 +58,7 @@ def test_missing_msg_attributes(client):
 
 
 def test_gitlab_event_processed(client):
-    headers = {"X-Gitlab-Event": "push", "X-Gitlab-Token": "foo"}
+    headers = {"X-Gitlab-Event": "push", "X-Gitlab-Token": "foo", "X-Team": "team1"}
     data = json.dumps({"object_kind": "push",
                        "checkout_sha": "foo",
                        "commits": [{"id": "foo", "timestamp": 2}],
@@ -81,6 +81,7 @@ def test_gitlab_event_processed(client):
         "signature": shared.create_unique_id(pubsub_msg["message"]),
         "msg_id": "foobar",
         "source": "gitlab",
+        "team": "team1",
     }
 
     shared.insert_row_into_bigquery = mock.MagicMock()
@@ -96,7 +97,7 @@ def test_gitlab_event_processed(client):
 
 
 def test_timestamp_timezone_event_processed(client):
-    headers = {"X-Gitlab-Event": "deployment", "X-Gitlab-Token": "foo"}
+    headers = {"X-Gitlab-Event": "deployment", "X-Gitlab-Token": "foo", "X-Team": "team1"}
     data = json.dumps({"object_kind": "deployment",
                        "short_sha": "279484c0",
                        "status_changed_at": "2021-04-28 21:50:00 +0200",
@@ -120,6 +121,7 @@ def test_timestamp_timezone_event_processed(client):
         "signature": shared.create_unique_id(pubsub_msg["message"]),
         "msg_id": "foobar",
         "source": "gitlab",
+        "team": "team1",
     }
 
     shared.insert_row_into_bigquery = mock.MagicMock()

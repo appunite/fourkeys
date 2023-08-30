@@ -71,6 +71,7 @@ def index():
 def process_github_event(headers, msg):
     event_type = headers["X-Github-Event"]
     signature = headers["X-Hub-Signature"]
+    team = headers["X-Team"]
     source = "github"
 
     if "Mock" in headers:
@@ -141,6 +142,7 @@ def process_github_event(headers, msg):
         "signature": signature,
         "msg_id": msg["message_id"],
         "source": source,
+        "team": team,
     }
 
     return github_event

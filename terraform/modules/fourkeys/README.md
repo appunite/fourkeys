@@ -56,29 +56,31 @@
 
 ## Inputs
 
-| Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
-| <a name="input_bigquery_region"></a> [bigquery\_region](#input\_bigquery\_region) | Region to deploy BigQuery resources in. | `string` | `"US"` | no |
-| <a name="input_circleci_parser_url"></a> [circleci\_parser\_url](#input\_circleci\_parser\_url) | The URL for the CircleCI parser container image. A default value pointing to the project's container registry is defined in under local values of this module. | `string` | `""` | no |
-| <a name="input_cloud_build_parser_url"></a> [cloud\_build\_parser\_url](#input\_cloud\_build\_parser\_url) | The URL for the Cloud Build parser container image. A default value pointing to the project's container registry is defined in under local values of this module. | `string` | `""` | no |
-| <a name="input_dashboard_container_url"></a> [dashboard\_container\_url](#input\_dashboard\_container\_url) | The URL for the dashboard container image. A default value pointing to the project's container registry is defined in under local values of this module. | `string` | `""` | no |
-| <a name="input_enable_apis"></a> [enable\_apis](#input\_enable\_apis) | Toggle to include required APIs. | `bool` | `false` | no |
-| <a name="input_enable_dashboard"></a> [enable\_dashboard](#input\_enable\_dashboard) | Toggle to enable cloud run service creation. | `bool` | `true` | no |
+| Name                                                                                                                      | Description | Type | Default | Required |
+|---------------------------------------------------------------------------------------------------------------------------|-------------|------|---------|:--------:|
+| <a name="input_bigquery_region"></a> [bigquery\_region](#input\_bigquery\_region)                                         | Region to deploy BigQuery resources in. | `string` | `"US"` | no |
+| <a name="input_circleci_parser_url"></a> [circleci\_parser\_url](#input\_circleci\_parser\_url)                           | The URL for the CircleCI parser container image. A default value pointing to the project's container registry is defined in under local values of this module. | `string` | `""` | no |
+| <a name="input_cloud_build_parser_url"></a> [cloud\_build\_parser\_url](#input\_cloud\_build\_parser\_url)                | The URL for the Cloud Build parser container image. A default value pointing to the project's container registry is defined in under local values of this module. | `string` | `""` | no |
+| <a name="input_dashboard_container_url"></a> [dashboard\_container\_url](#input\_dashboard\_container\_url)               | The URL for the dashboard container image. A default value pointing to the project's container registry is defined in under local values of this module. | `string` | `""` | no |
+| <a name="input_enable_apis"></a> [enable\_apis](#input\_enable\_apis)                                                     | Toggle to include required APIs. | `bool` | `false` | no |
+| <a name="input_enable_dashboard"></a> [enable\_dashboard](#input\_enable\_dashboard)                                      | Toggle to enable cloud run service creation. | `bool` | `true` | no |
 | <a name="input_event_handler_container_url"></a> [event\_handler\_container\_url](#input\_event\_handler\_container\_url) | The URL for the event\_handler container image. A default value pointing to the project's container registry is defined in under local values of this module. | `string` | `""` | no |
 | <a name="input_github_parser_url"></a> [github\_parser\_url](#input\_github\_parser\_url) | The URL for the Github parser container image. A default value pointing to the project's container registry is defined in under local values of this module. | `string` | `""` | no |
 | <a name="input_gitlab_parser_url"></a> [gitlab\_parser\_url](#input\_gitlab\_parser\_url) | The URL for the Gitlab parser container image. A default value pointing to the project's container registry is defined in under local values of this module. | `string` | `""` | no |
 | <a name="input_pagerduty_parser_url"></a> [pagerduty\_parser\_url](#input\_pagerduty\_parser\_url) | The URL for the Pager Duty parser container image. A default value pointing to the project's container registry is defined in under local values of this module. | `string` | `""` | no |
 | <a name="input_parsers"></a> [parsers](#input\_parsers) | List of data parsers to configure. Acceptable values are: 'github', 'gitlab', 'cloud-build', 'tekton', 'circleci', 'pagerduty' | `list(string)` | n/a | yes |
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | project to deploy four keys resources to | `string` | n/a | yes |
+| <a name="input_teams"></a> [teams](#input\_teams)                                                                         | List of teams that work in your company. | `list(string)` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | Region to deploy fource keys resources in. | `string` | `"us-central1"` | no |
 | <a name="input_tekton_parser_url"></a> [tekton\_parser\_url](#input\_tekton\_parser\_url) | The URL for the Tekton parser container image. A default value pointing to the project's container registry is defined in under local values of this module. | `string` | `""` | no |
 
 ## Outputs
 
-| Name | Description |
-|------|-------------|
-| <a name="output_dashboard_endpoint"></a> [dashboard\_endpoint](#output\_dashboard\_endpoint) | n/a |
-| <a name="output_event_handler_endpoint"></a> [event\_handler\_endpoint](#output\_event\_handler\_endpoint) | n/a |
-| <a name="output_event_handler_secret"></a> [event\_handler\_secret](#output\_event\_handler\_secret) | n/a |
+| Name                                                                                                                                 | Description |
+|--------------------------------------------------------------------------------------------------------------------------------------|-------------|
+| <a name="output_dashboard_endpoint"></a> [dashboard\_endpoint](#output\_dashboard\_endpoint)                                         | n/a |
+| <a name="output_event_handler_endpoint"></a> [event\_handler\_endpoint](#output\_event\_handler\_endpoint)                           | n/a |
+| <a name="output_event_handler_secret"></a> [event\_handler\_secret](#output\_event\_handler\_secret)                                 | n/a |
+| <a name="output_event_handler_project_secrets"></a> [event\_handler\_project\_secrets](#output\_event\_handler\_project\_secrets)    | n/a |
 | <a name="output_fourkeys_service_account_email"></a> [fourkeys\_service\_account\_email](#output\_fourkeys\_service\_account\_email) | n/a |
 <!-- END_TF_DOCS -->

@@ -59,7 +59,7 @@ def test_missing_msg_attributes(client):
 
 @mock.patch("shared.create_unique_id", mock.MagicMock(return_value="01010101010011"))
 def test_github_event_processed(client):
-    headers = {"User-Agent": "Atlassian Webhook HTTP Client"}
+    headers = {"User-Agent": "Atlassian Webhook HTTP Client", "X-Team": "team1"}
     pubsub_msg = {
         "message": {
             "data": base64.b64encode(jira_issue_updated.encode("utf-8")).decode("utf-8"),
@@ -76,6 +76,7 @@ def test_github_event_processed(client):
         "signature": "01010101010011",
         "msg_id": "krowa_message_id",
         "source": "jira",
+        "team": "team1",
     }
 
     shared.insert_row_into_bigquery = mock.MagicMock()

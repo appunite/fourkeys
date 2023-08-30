@@ -24,6 +24,11 @@ variable "parsers" {
   description = "List of data parsers to configure. Acceptable values are: 'github', 'gitlab', 'cloud-build', 'tekton', 'circleci', 'pagerduty'"
 }
 
+variable "teams" {
+  type        = list(string)
+  description = "List of teams that work in your company."
+}
+
 variable "enable_apis" {
   type        = bool
   description = "Toggle to include required APIs."

@@ -40,6 +40,7 @@ def index():
         abort(403, f"Source not authorized: {source}")
 
     auth_source = sources.AUTHORIZED_SOURCES[source]
+    team = request.args.get("team", default=None)
     signature_sources = {**request.headers, **request.args}
     signature = signature_sources.get(auth_source.signature, None)
 
@@ -50,13 +51,17 @@ def index():
 
     # Verify the signature
     verify_signature = auth_source.verification
-    if not verify_signature(signature, body):
+    if not verify_signature(signature, team, body):
         abort(403, "Signature does not match expected signature")
 
     # Remove the Auth header so we do not publish it to Pub/Sub
     pubsub_headers = dict(request.headers)
     if "Authorization" in pubsub_headers:
         del pubsub_headers["Authorization"]
+    if "X-Team" in pubsub_headers:
+        del pubsub_headers["X-Team"]
+
+    pubsub_headers["X-Team"] = team if team else "default"
 
     # Publish to Pub/Sub
     publish_to_pubsub(source, body, pubsub_headers)

@@ -30,6 +30,11 @@ variable "parsers" {
   description = "List of data parsers to configure. Acceptable values are: 'github', 'gitlab', 'cloud-build', 'tekton', 'pagerduty'"
 }
 
+variable "teams" {
+  type        = list(string)
+  description = "List of teams that work in your company."
+}
+
 variable "event_handler_container_url" {
   type        = string
   description = "URL for the event_handler container image."

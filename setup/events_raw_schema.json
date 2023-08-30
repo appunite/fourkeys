@@ -33,5 +33,10 @@
     "mode": "NULLABLE",
     "name": "source",
     "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "team",
+    "type": "STRING"
   }
 ]

@@ -58,7 +58,7 @@ def test_missing_msg_attributes(client):
 
 
 def test_github_event_processed(client):
-    headers = {"X-Github-Event": "push", "X-Hub-Signature": "foo"}
+    headers = {"X-Github-Event": "push", "X-Hub-Signature": "foo", "X-Team": "team1"}
     commit = json.dumps({"head_commit": {"timestamp": 0, "id": "bar"}}).encode(
         "utf-8"
     )
@@ -78,6 +78,7 @@ def test_github_event_processed(client):
         "signature": "foo",
         "msg_id": "foobar",
         "source": "github",
+        "team": "team1",
     }
 
     shared.insert_row_into_bigquery = mock.MagicMock()
@@ -94,7 +95,7 @@ def test_github_event_processed(client):
 
 def test_github_event_avoid_id_conflicts_pull_requests(client):
 
-    headers = {"X-Github-Event": "pull_request", "X-Hub-Signature": "foo"}
+    headers = {"X-Github-Event": "pull_request", "X-Hub-Signature": "foo", "X-Team": "team1"}
     commit = json.dumps({
         "pull_request": {
             "updated_at": "2021-06-15T13:12:14Z"
@@ -121,7 +122,7 @@ def test_github_event_avoid_id_conflicts_pull_requests(client):
 
 def test_github_event_avoid_id_conflicts_issues(client):
 
-    headers = {"X-Github-Event": "issues", "X-Hub-Signature": "foo"}
+    headers = {"X-Github-Event": "issues", "X-Hub-Signature": "foo", "X-Team": "team1"}
     commit = json.dumps({
         "issue": {
             "updated_at": "2021-06-15T13:12:14Z",

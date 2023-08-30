@@ -15,10 +15,14 @@
 import hmac
 from hashlib import sha1, sha256
 import os
+from typing import Callable,Union
 
 from google.cloud import secretmanager
+from werkzeug.datastructures import Headers
 
 PROJECT_NAME = os.environ.get("PROJECT_NAME")
+
+VerificationFunction = Callable[[str, Union[str, None], bytes], bool]
 
 
 class EventSource(object):
@@ -26,12 +30,12 @@ class EventSource(object):
     A source of event data being delivered to the webhook
     """
 
-    def __init__(self, signature_header, verification_func):
+    def __init__(self, signature_header: str, verification_func: VerificationFunction):
         self.signature = signature_header
         self.verification = verification_func
 
 
-def github_verification(signature, body):
+def github_verification(signature: str, team: Union[str, None], body: bytes) -> bool:
     """
     Verifies that the signature received from the github event is accurate
     """
@@ -39,7 +43,7 @@ def github_verification(signature, body):
     expected_signature = "sha1="
     try:
         # Get secret from Cloud Secret Manager
-        secret = get_secret(PROJECT_NAME, "event-handler", "latest")
+        secret = read_secret(team)
         # Compute the hashed signature
         hashed = hmac.new(secret, body, sha1)
         expected_signature += hashed.hexdigest()
@@ -50,7 +54,7 @@ def github_verification(signature, body):
     return hmac.compare_digest(signature, expected_signature)
 
 
-def circleci_verification(signature, body):
+def circleci_verification(signature: str, team: Union[str, None], body: bytes) -> bool:
     """
     Verifies that the signature received from the circleci event is accurate
     """
@@ -58,18 +62,19 @@ def circleci_verification(signature, body):
     expected_signature = "v1="
     try:
         # Get secret from Cloud Secret Manager
-        secret = get_secret(PROJECT_NAME, "event-handler", "latest")
+        secret = read_secret(team)
         # Compute the hashed signature
         hashed = hmac.new(secret, body, 'sha256')
         expected_signature += hashed.hexdigest()
 
     except Exception as e:
         print(e)
+        return False
 
     return hmac.compare_digest(signature, expected_signature)
 
 
-def pagerduty_verification(signatures, body):
+def pagerduty_verification(signatures: str, team: Union[str, None], body: bytes):
     """
     Verifies that the signature received from the pagerduty event is accurate
     """
@@ -85,7 +90,7 @@ def pagerduty_verification(signatures, body):
     expected_signature = "v1="
     try:
         # Get secret from Cloud Secret Manager
-        secret = get_secret(PROJECT_NAME, "pager_duty_secret", "latest")
+        secret = read_secret(team)
 
         # Compute the hashed signature
         hashed = hmac.new(secret, body, sha256)
@@ -93,6 +98,7 @@ def pagerduty_verification(signatures, body):
 
     except Exception as e:
         print(e)
+        return False
 
     if expected_signature in signature_list:
         return True
@@ -100,33 +106,41 @@ def pagerduty_verification(signatures, body):
         return False
 
 
-def simple_token_verification(token, body):
+def simple_token_verification(token: str, team: Union[str, None], body: bytes) -> bool:
     """
     Verifies that the token received from the event is accurate
     """
     if not token:
         raise Exception("Token is empty")
-    secret = get_secret(PROJECT_NAME, "event-handler", "latest")
+    try:
+        secret = read_secret(team)
+    except Exception as e:
+        print(e)
+        return False
 
     return secret.decode() == token
 
 
-def get_secret(project_name, secret_name, version_num):
+def read_secret(team: Union[str, None] = None) -> bytes:
+    if team is None:
+        return get_secret(PROJECT_NAME, "event-handler", "latest")
+    else:
+        return get_secret(PROJECT_NAME, f"event-handler-{team}", "latest")
+
+
+def get_secret(project_name, secret_name, version_num) -> bytes:
     """
     Returns secret payload from Cloud Secret Manager
     """
-    try:
-        client = secretmanager.SecretManagerServiceClient()
-        name = client.secret_version_path(
-            project_name, secret_name, version_num
-        )
-        secret = client.access_secret_version(name)
-        return secret.payload.data
-    except Exception as e:
-        print(e)
+    client = secretmanager.SecretManagerServiceClient()
+    name = client.secret_version_path(
+        project_name, secret_name, version_num
+    )
+    secret = client.access_secret_version(name)
+    return secret.payload.data
 
 
-def get_source(headers):
+def get_source(headers: Headers) -> str:
     """
     Gets the source from the User-Agent header
     """

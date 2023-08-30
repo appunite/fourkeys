@@ -72,6 +72,7 @@ def process_jira_event(headers, msg):
     # event_type = headers["X-Github-Event"]
     # signature = headers["X-Hub-Signature"]
     source = "jira"
+    team = headers["X-Team"]
 
     if "Mock" in headers:
         source += "mock"
@@ -96,6 +97,7 @@ def process_jira_event(headers, msg):
         "signature": signature,
         "msg_id": message_id,
         "source": source,
+        "team": team,
     }
 
     return jira_event

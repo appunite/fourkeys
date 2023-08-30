@@ -7,6 +7,14 @@ output "event_handler_secret" {
   sensitive = true
 }
 
+
+output "event_handler_project_secrets" {
+  value = {
+    for key in var.teams : key => google_secret_manager_secret_version.event_handler_project_secret[key].secret_data
+  }
+  sensitive = true
+}
+
 output "dashboard_endpoint" {
   value = try(google_cloud_run_service.dashboard[0].status[0]["url"], "")
 }
