@@ -1,1 +1,10 @@
-select * from `metrics-keys.four_keys.tasks_jira`
+SELECT
+    project,
+    issue_id,
+    link,
+    is_bug,
+    type,
+    time_created,
+    time_resolved
+FROM
+    `metrics-keys.four_keys.tasks_jira`

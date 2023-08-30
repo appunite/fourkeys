@@ -2,12 +2,11 @@ WITH
     StatusChanges AS (
       SELECT
         project,
-        source,
         issue_id,
         link,
         status,
         time_created,
-        type,
+        (CASE WHEN type = "bug" AND priority = "Highest" THEN "Incident" ELSE type END) as type,
         ROW_NUMBER() OVER (PARTITION BY project, issue_id ORDER BY time_created) AS rn_asc,
         ROW_NUMBER() OVER (PARTITION BY project, issue_id ORDER BY time_created DESC) AS rn_desc
       FROM
@@ -16,7 +15,6 @@ WITH
   TasksStatus AS (
       SELECT
       project,
-      source,
       issue_id,
       MIN(CASE WHEN rn_asc = 1 THEN time_created END) AS created_at,
       MIN(CASE WHEN rn_desc = 1 THEN type END) AS type,
@@ -29,8 +27,7 @@ WITH
       StatusChanges
     GROUP BY
       project,
-      source,
       issue_id
   )
 
-SELECT type = "Bug" as is_bug, source, project, issue_id, link, created_at as time_created, finished_at as time_resolved  from TasksStatus
+SELECT project, issue_id, link, type = "Bug" OR type = "Incident" as is_bug, type, created_at as time_created, finished_at as time_resolved  from TasksStatus
