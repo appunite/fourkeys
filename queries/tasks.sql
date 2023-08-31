@@ -5,6 +5,7 @@ SELECT
     is_bug,
     type,
     time_created,
+    time_started,
     time_resolved
 FROM
     `metrics-keys.four_keys.tasks_jira`
