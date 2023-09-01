@@ -100,6 +100,21 @@ resource "google_bigquery_table" "view_flaky_builds" {
   ]
 }
 
+resource "google_bigquery_table" "view_merged_failed_jobs" {
+  project    = var.project_id
+  dataset_id = google_bigquery_dataset.four_keys.dataset_id
+  table_id   = "merged_failed_jobs"
+  view {
+    query          = file("${path.module}/queries/merged_failed_jobs.sql")
+    use_legacy_sql = false
+  }
+  deletion_protection = false
+  depends_on = [
+    google_project_service.fourkeys_services,
+    google_bigquery_table.events_raw
+  ]
+}
+
 resource "google_bigquery_table" "view_projects" {
   project    = var.project_id
   dataset_id = google_bigquery_dataset.four_keys.dataset_id
