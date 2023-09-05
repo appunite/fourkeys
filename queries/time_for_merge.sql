@@ -85,6 +85,7 @@ SELECT
    AllPullRequests.pr_id,
    AllPullRequests.link,
    AllPullRequests.status as last_status,
+   AllPullRequests.tasks,
    CratedTime.time_created,
    CASE WHEN AllPullRequests.status = "merged" THEN MergeTime.time_resolved END as time_resolved,
    DATE_DIFF(time_resolved, CratedTime.time_created, second) as lead_time_seconds,
