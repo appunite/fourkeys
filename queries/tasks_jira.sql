@@ -39,21 +39,8 @@ WITH
         project,
         issue_id
     ),
-    CreatedTasks AS (
-      SELECT
-        project,
-        issue_id,
-        MIN(time_created) AS time_created
-      FROM
-        `metrics-keys.four_keys.jira_tasks_statuses`
-      WHERE
-        status = 'To Do'
-      GROUP BY
-        project,
-        issue_id
-    ),
     AllTasks AS (
-      SELECT project, issue_id, type, link, status
+      SELECT project, issue_id, type, link, status, time_task_created
       FROM (
           SELECT
             project,
@@ -61,6 +48,7 @@ WITH
             (CASE WHEN type = "bug" AND priority = "Highest" THEN "Incident" ELSE type END) as type,
             link,
             status,
+            time_task_created,
             ROW_NUMBER() OVER (PARTITION BY project, issue_id ORDER BY time_created DESC) AS rn_desc,
           FROM
             `metrics-keys.four_keys.jira_tasks_statuses`
@@ -75,11 +63,10 @@ SELECT
    AllTasks.link,
    AllTasks.type = "Bug" OR AllTasks.type = "Incident" as is_bug,
    AllTasks.type,
-   CreatedTasks.time_created,
+   AllTasks.time_task_created as time_created,
    StartedTasks.time_started,
    FinishedTasks.time_resolved
 FROM AllTasks
-FULL OUTER JOIN CreatedTasks ON AllTasks.project = CreatedTasks.project AND AllTasks.issue_id = CreatedTasks.issue_id
 FULL OUTER JOIN StartedTasks ON AllTasks.project = StartedTasks.project AND AllTasks.issue_id = StartedTasks.issue_id
 FULL OUTER JOIN FinishedTasks ON AllTasks.project = FinishedTasks.project AND AllTasks.issue_id = FinishedTasks.issue_id
 WHERE

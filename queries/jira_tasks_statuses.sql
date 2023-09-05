@@ -25,6 +25,7 @@ SELECT
   JSON_EXTRACT_SCALAR(metadata, '$.issue.fields.issuetype.name') as type,
   CASE WHEN JSON_EXTRACT_SCALAR(metadata, '$.webhookEvent') = "jira:issue_deleted" THEN "Deleted" else JSON_EXTRACT_SCALAR(metadata, '$.issue.fields.status.name') END as status,
   JSON_EXTRACT_SCALAR(metadata, '$.issue.fields.resolution.name') as resolution,
+  TIMESTAMP(JSON_EXTRACT_SCALAR(metadata, '$.issue.fields.created')) as time_task_created,
   time_created
 FROM `metrics-keys.four_keys.events_raw`
 where
